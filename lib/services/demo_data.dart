@@ -3,7 +3,7 @@ import '../models/song.dart';
 
 const _artistA = Artist(
   id: 'a1',
-  name: 'Sơn Trùng MTP',
+  name: 'Sơn Tùng MTP',
   image: 'assets/imgs/channels4_profile.jpg',
 );
 const _artistB = Artist(
