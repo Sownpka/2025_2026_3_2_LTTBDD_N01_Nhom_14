@@ -49,11 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(
                         demoSongs[i].title,
                         style: TextStyle(
+                          // Bai dang chon thi in dam cho de nhin.
                           fontWeight: baiDangChon == i
                               ? FontWeight.bold
                               : FontWeight.normal,
                         ),
                       ),
+                      subtitle: Text(demoSongs[i].artist.name),
+                      trailing: const Icon(Icons.play_arrow),
                     ),
                 ],
               ),
