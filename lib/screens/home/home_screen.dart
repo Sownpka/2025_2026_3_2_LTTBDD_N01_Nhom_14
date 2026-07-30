@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../services/audio_service.dart';
 import '../../services/data_service.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,8 +12,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var baiDangChon = -1;
   final duLieu = DataService();
+  StreamSubscription? theoDoiMayPhat;
+
+  @override
+  void initState() {
+    super.initState();
+    khoiTaoAudio();
+    theoDoiMayPhat = mayPhat.playerStateStream.listen((trangThai) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    theoDoiMayPhat?.cancel();
+    // Khong dispose mayPhat vi no la bien dung chung cua ca app
+    super.dispose();
+  }
+
+  Future<void> chonBai(int i) async {
+    var dsBai = duLieu.songs;
+
+    if (viTriBai == i) {
+      if (dangPhat) {
+        await mayPhat.pause();
+      } else {
+        await mayPhat.play();
+      }
+      return;
+    }
+
+    dsPhat = dsBai;
+    viTriBai = i;
+    setState(() {});
+    try {
+      await mayPhat.setAsset(dsBai[i].audio);
+      await mayPhat.play();
+    } catch (e) {
+      debugPrint('Khong phat duoc ${dsBai[i].audio}: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   for (var i = 0; i < dsBai.length; i++)
                     ListTile(
                       onTap: () {
-                        setState(() {
-                          baiDangChon = i;
-                        });
+                        chonBai(i);
                       },
                       leading: Image.asset(
                         dsBai[i].image,
@@ -48,13 +89,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: Text(
                         dsBai[i].title,
                         style: TextStyle(
-                          fontWeight: baiDangChon == i
+                          fontWeight: viTriBai == i
                               ? FontWeight.bold
                               : FontWeight.normal,
                         ),
                       ),
                       subtitle: Text(dsBai[i].artist.name),
-                      trailing: const Icon(Icons.play_arrow),
+                      trailing: Icon(
+                        viTriBai == i && dangPhat
+                            ? Icons.pause
+                            : Icons.play_arrow,
+                      ),
                     ),
                 ],
               ),
