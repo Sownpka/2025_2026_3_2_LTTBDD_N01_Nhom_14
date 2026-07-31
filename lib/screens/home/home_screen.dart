@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/audio_service.dart';
 import '../../services/data_service.dart';
+import '../../widgets/mini_player.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
