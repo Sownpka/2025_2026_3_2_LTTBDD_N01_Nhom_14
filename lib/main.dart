@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'screens/home/home_screen.dart';
 import 'services/audio_service.dart';
 import 'theme/app_theme.dart';
+import 'screens/main_screen.dart';
 
 void main() {
   khoiTaoAudio();
@@ -11,7 +11,7 @@ void main() {
       title: 'Music App',
       debugShowCheckedModeBanner: false,
       theme: taoTheme(),
-      home: const HomeScreen(),
+      home: const MainScreen(),
     ),
   );
 }
