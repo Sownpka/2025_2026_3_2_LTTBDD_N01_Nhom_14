@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../services/audio_service.dart';
 import '../../services/data_service.dart';
 import '../../widgets/mini_player.dart';
+import '../../widgets/song_tile.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -77,30 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ListView(
                 children: [
                   for (var i = 0; i < dsBai.length; i++)
-                    ListTile(
-                      onTap: () {
-                        chonBai(i);
-                      },
-                      leading: Image.asset(
-                        dsBai[i].image,
-                        width: 52,
-                        height: 52,
-                        fit: BoxFit.cover,
-                      ),
-                      title: Text(
-                        dsBai[i].title,
-                        style: TextStyle(
-                          fontWeight: viTriBai == i
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                      subtitle: Text(dsBai[i].artist.name),
-                      trailing: Icon(
-                        viTriBai == i && dangPhat
-                            ? Icons.pause
-                            : Icons.play_arrow,
-                      ),
+                    SongTile(
+                      bai: dsBai[i],
+                      dangChon: viTriBai == i,
+                      dangPhatBai: viTriBai == i && dangPhat,
+                      onTap: () => chonBai(i),
                     ),
                 ],
               ),
