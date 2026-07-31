@@ -20,6 +20,20 @@ class SongTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
+      leading: Image.asset(
+        bai.image,
+        width: 52,
+        height: 52,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 52,
+            height: 52,
+            color: Colors.grey,
+            child: const Icon(Icons.music_note),
+          );
+        },
+      ),
       title: Text(bai.title, maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Text(bai.artist.name),
     );
