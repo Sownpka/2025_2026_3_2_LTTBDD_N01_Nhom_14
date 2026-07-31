@@ -62,6 +62,30 @@ class _PlayerScreenState extends State<PlayerScreen> {
               tongThoiGian: tongThoiGian,
               onTua: (viTri) => tuaDen(viTri),
             ),
+
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  iconSize: 44,
+                  icon: const Icon(Icons.skip_previous),
+                  onPressed: () => baiTruoc(),
+                ),
+                const SizedBox(width: 16),
+                IconButton(
+                  iconSize: 56,
+                  icon: Icon(dangPhat ? Icons.pause_circle : Icons.play_circle),
+                  onPressed: () => tamDungHoacPhat(),
+                ),
+                const SizedBox(width: 16),
+                IconButton(
+                  iconSize: 44,
+                  icon: const Icon(Icons.skip_next),
+                  onPressed: () => baiTiepTheo(),
+                ),
+              ],
+            ),
           ],
         ),
       ),
