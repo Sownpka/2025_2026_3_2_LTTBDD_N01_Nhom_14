@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/audio_service.dart';
 import '../../widgets/seek_bar.dart';
+import 'dart:async';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -11,6 +12,27 @@ class PlayerScreen extends StatefulWidget {
 }
 
 class _PlayerScreenState extends State<PlayerScreen> {
+  StreamSubscription? _theoDoiTrangThai;
+  StreamSubscription? _theoDoiViTri;
+
+  @override
+  void initState() {
+    super.initState();
+    _theoDoiTrangThai = mayPhat.playerStateStream.listen((_) {
+      if (mounted) setState(() {});
+    });
+    _theoDoiViTri = mayPhat.positionStream.listen((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _theoDoiTrangThai?.cancel();
+    _theoDoiViTri?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final bai = baiDangPhat;
