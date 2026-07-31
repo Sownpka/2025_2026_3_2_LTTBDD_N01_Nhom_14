@@ -36,26 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> chonBai(int i) async {
-    var dsBai = duLieu.songs;
-
+    final dsBai = duLieu.songs;
     if (viTriBai == i) {
-      if (dangPhat) {
-        await mayPhat.pause();
-      } else {
-        await mayPhat.play();
-      }
-      return;
+      await tamDungHoacPhat();
+    } else {
+      await phatBai(dsBai[i], dsBai);
     }
-
-    dsPhat = dsBai;
-    viTriBai = i;
     setState(() {});
-    try {
-      await mayPhat.setAsset(dsBai[i].audio);
-      await mayPhat.play();
-    } catch (e) {
-      debugPrint('Khong phat duoc ${dsBai[i].audio}: $e');
-    }
   }
 
   @override
