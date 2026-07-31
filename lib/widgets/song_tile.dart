@@ -43,6 +43,7 @@ class SongTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(bai.artist.name),
+      trailing: Icon(dangPhatBai ? Icons.pause : Icons.play_arrow),
     );
   }
 }
