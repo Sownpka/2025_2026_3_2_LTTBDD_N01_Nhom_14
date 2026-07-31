@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/audio_service.dart';
+import '../../widgets/seek_bar.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -19,6 +20,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
         child: Center(child: Text('Chua chon bai hat nao')),
       );
     }
+
+    final tongThoiGian = mayPhat.duration ?? bai.duration;
 
     return Material(
       child: SafeArea(
@@ -53,6 +56,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
             ),
             const SizedBox(height: 6),
             Text('${bai.artist.name} - ${bai.album}'),
+            const SizedBox(height: 24),
+            SeekBar(
+              viTri: mayPhat.position,
+              tongThoiGian: tongThoiGian,
+              onTua: (viTri) => tuaDen(viTri),
+            ),
           ],
         ),
       ),
