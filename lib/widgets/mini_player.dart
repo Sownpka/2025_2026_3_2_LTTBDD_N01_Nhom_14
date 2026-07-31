@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../services/audio_service.dart';
 import '../screens/player/player_screen.dart';
+import 'dart:async';
 
 class MiniPlayer extends StatefulWidget {
   const MiniPlayer({super.key});
@@ -11,6 +12,22 @@ class MiniPlayer extends StatefulWidget {
 }
 
 class _MiniPlayerState extends State<MiniPlayer> {
+  StreamSubscription? _theoDoiTrangThai;
+
+  @override
+  void initState() {
+    super.initState();
+    _theoDoiTrangThai = mayPhat.playerStateStream.listen((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _theoDoiTrangThai?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final bai = baiDangPhat;
