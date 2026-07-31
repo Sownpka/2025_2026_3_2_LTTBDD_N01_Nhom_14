@@ -32,9 +32,34 @@ Future<void> _taiVaPhat() async {
   }
 }
 
+Future<void> phatBai(Song bai, List<Song> ds) async {
+  dsPhat = ds;
+  final viTri = ds.indexWhere((b) => b.id == bai.id);
+  viTriBai = viTri >= 0 ? viTri : 0;
+  await _taiVaPhat();
+}
+
+Future<void> tamDungHoacPhat() async {
+  if (mayPhat.playing) {
+    await mayPhat.pause();
+  } else {
+    await mayPhat.play();
+  }
+}
+
 Future<void> baiTiepTheo() async {
   if (dsPhat.isEmpty) return;
   viTriBai = (viTriBai + 1) % dsPhat.length;
+  await _taiVaPhat();
+}
+
+Future<void> baiTruoc() async {
+  if (dsPhat.isEmpty) return;
+  if (mayPhat.position.inSeconds > 3) {
+    await mayPhat.seek(Duration.zero);
+    return;
+  }
+  viTriBai = (viTriBai - 1 + dsPhat.length) % dsPhat.length;
   await _taiVaPhat();
 }
 
