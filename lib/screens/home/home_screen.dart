@@ -18,17 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   StreamSubscription? theoDoiMayPhat;
 
   @override
-  void initState() {
-    super.initState();
-    khoiTaoAudio();
-    theoDoiMayPhat = mayPhat.playerStateStream.listen((trangThai) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
   void dispose() {
     theoDoiMayPhat?.cancel();
     // Khong dispose mayPhat vi no la bien dung chung cua ca app
