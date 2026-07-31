@@ -34,7 +34,14 @@ class SongTile extends StatelessWidget {
           );
         },
       ),
-      title: Text(bai.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+      title: Text(
+        bai.title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontWeight: dangChon ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
       subtitle: Text(bai.artist.name),
     );
   }
