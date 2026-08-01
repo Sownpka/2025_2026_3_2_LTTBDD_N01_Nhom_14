@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../services/audio_service.dart';
 import '../../widgets/seek_bar.dart';
 import 'dart:async';
+import '../../theme/app_theme.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -38,15 +39,24 @@ class _PlayerScreenState extends State<PlayerScreen> {
     final bai = baiDangPhat;
 
     if (bai == null) {
-      return const Material(
-        child: Center(child: Text('Chua chon bai hat nao')),
+      return Scaffold(
+        appBar: AppBar(title: const Text('Dang phat')),
+        body: const Center(child: Text('Chua chon bai hat nao')),
       );
     }
 
     final tongThoiGian = mayPhat.duration ?? bai.duration;
 
-    return Material(
-      child: SafeArea(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Đang phát'),
+        leading: IconButton(
+          icon: const Icon(Icons.keyboard_arrow_down),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
             Align(
