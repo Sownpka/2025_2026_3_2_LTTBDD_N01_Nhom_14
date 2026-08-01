@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../models/song.dart';
+import 'dart:math';
 
 final AudioPlayer mayPhat = AudioPlayer();
 
@@ -9,6 +10,27 @@ List<Song> dsPhat = [];
 int viTriBai = -1;
 
 List<Song> dsGanDay = [];
+
+enum CheDoLap { khong, tatCa, motBai }
+
+bool xaoTron = false;
+CheDoLap cheDoLap = CheDoLap.khong;
+
+final Random _ngauNhien = Random();
+
+void doiXaoTron() {
+  xaoTron = !xaoTron;
+}
+
+void doiCheDoLap() {
+  if (cheDoLap == CheDoLap.khong) {
+    cheDoLap = CheDoLap.tatCa;
+  } else if (cheDoLap == CheDoLap.tatCa) {
+    cheDoLap = CheDoLap.motBai;
+  } else {
+    cheDoLap = CheDoLap.khong;
+  }
+}
 
 void _ghiNhanGanDay(Song bai) {
   dsGanDay.removeWhere((b) => b.id == bai.id);
@@ -26,7 +48,7 @@ bool get dangPhat => mayPhat.playing;
 void khoiTaoAudio() {
   mayPhat.playerStateStream.listen((trangThai) {
     if (trangThai.processingState == ProcessingState.completed) {
-      baiTiepTheo();
+      baiTiepTheo(tuDong: true);
     }
   });
 }
@@ -58,9 +80,32 @@ Future<void> tamDungHoacPhat() async {
   }
 }
 
-Future<void> baiTiepTheo() async {
+Future<void> baiTiepTheo({bool tuDong = false}) async {
   if (dsPhat.isEmpty) return;
-  viTriBai = (viTriBai + 1) % dsPhat.length;
+
+  // Het bai va dang lap 1 bai thi phat lai chinh no
+  if (tuDong && cheDoLap == CheDoLap.motBai) {
+    await mayPhat.seek(Duration.zero);
+    await mayPhat.play();
+    return;
+  }
+
+  if (xaoTron && dsPhat.length > 1) {
+    var viTriMoi = viTriBai;
+    while (viTriMoi == viTriBai) {
+      viTriMoi = _ngauNhien.nextInt(dsPhat.length);
+    }
+    viTriBai = viTriMoi;
+  } else {
+    // Het bai cuoi ma khong lap thi dung han
+    if (tuDong && cheDoLap == CheDoLap.khong && viTriBai >= dsPhat.length - 1) {
+      await mayPhat.pause();
+      await mayPhat.seek(Duration.zero);
+      return;
+    }
+    viTriBai = (viTriBai + 1) % dsPhat.length;
+  }
+
   await _taiVaPhat();
 }
 
