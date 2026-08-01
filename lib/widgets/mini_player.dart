@@ -53,19 +53,26 @@ class _MiniPlayerState extends State<MiniPlayer> {
         child: Row(
           children: [
             const SizedBox(width: 12),
-            Image.asset(
-              bai.image,
-              width: 44,
-              height: 44,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 44,
-                  height: 44,
-                  color: Colors.grey,
-                  child: const Icon(Icons.music_note, size: 20),
-                );
-              },
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                bai.image,
+                width: 44,
+                height: 44,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 44,
+                    height: 44,
+                    color: Colors.white24,
+                    child: const Icon(
+                      Icons.music_note,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
