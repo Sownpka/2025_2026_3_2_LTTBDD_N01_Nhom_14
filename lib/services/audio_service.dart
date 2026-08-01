@@ -8,6 +8,16 @@ final AudioPlayer mayPhat = AudioPlayer();
 List<Song> dsPhat = [];
 int viTriBai = -1;
 
+List<Song> dsGanDay = [];
+
+void _ghiNhanGanDay(Song bai) {
+  dsGanDay.removeWhere((b) => b.id == bai.id);
+  dsGanDay.insert(0, bai);
+  if (dsGanDay.length > 10) {
+    dsGanDay = dsGanDay.sublist(0, 10);
+  }
+}
+
 Song? get baiDangPhat =>
     (viTriBai >= 0 && viTriBai < dsPhat.length) ? dsPhat[viTriBai] : null;
 
@@ -24,6 +34,7 @@ void khoiTaoAudio() {
 Future<void> _taiVaPhat() async {
   final bai = baiDangPhat;
   if (bai == null) return;
+  _ghiNhanGanDay(bai);
   try {
     await mayPhat.setAsset(bai.audio);
     await mayPhat.play();
