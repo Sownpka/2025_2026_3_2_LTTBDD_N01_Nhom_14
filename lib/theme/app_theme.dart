@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-const Color mauChinh = Color(0xFF5B21B6);
-const Color mauNen = Color(0xFFF8F7FC);
-const Color mauNhat = Color(0xFFDDD6FE);
+const Color mauChinh = Color(0xFF2563EB);
+const Color mauNen = Color(0xFFF5F7FB);
+const Color mauNhat = Color(0xFFDBEAFE);
 
 ThemeData taoTheme() {
   return ThemeData(
