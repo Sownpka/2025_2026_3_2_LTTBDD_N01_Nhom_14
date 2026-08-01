@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/audio_service.dart';
 import '../screens/player/player_screen.dart';
 import 'dart:async';
+import '../theme/app_theme.dart';
 
 class MiniPlayer extends StatefulWidget {
   const MiniPlayer({super.key});
@@ -43,7 +44,12 @@ class _MiniPlayerState extends State<MiniPlayer> {
       },
       child: Container(
         height: 64,
-        color: Colors.grey.shade200,
+        margin: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        decoration: BoxDecoration(
+          color: mauChinh,
+          borderRadius: BorderRadius.circular(14),
+        ),
         child: Row(
           children: [
             const SizedBox(width: 12),
