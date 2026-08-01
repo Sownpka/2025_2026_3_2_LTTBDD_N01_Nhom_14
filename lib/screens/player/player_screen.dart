@@ -136,13 +136,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                icon: const Icon(Icons.keyboard_arrow_down),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
             const SizedBox(height: 16),
             const SizedBox(height: 24),
             ClipRRect(
