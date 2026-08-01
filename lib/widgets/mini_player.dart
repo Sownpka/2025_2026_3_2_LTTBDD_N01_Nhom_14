@@ -92,11 +92,14 @@ class _MiniPlayerState extends State<MiniPlayer> {
               ),
             ),
             IconButton(
-              icon: Icon(dangPhat ? Icons.pause : Icons.play_arrow),
+              icon: Icon(
+                dangPhat ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+              ),
               onPressed: () => tamDungHoacPhat(),
             ),
             IconButton(
-              icon: const Icon(Icons.skip_next),
+              icon: const Icon(Icons.skip_next, color: Colors.white),
               onPressed: () => baiTiepTheo(),
             ),
           ],
