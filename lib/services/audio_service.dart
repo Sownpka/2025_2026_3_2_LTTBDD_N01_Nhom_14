@@ -22,6 +22,16 @@ void doiXaoTron() {
   xaoTron = !xaoTron;
 }
 
+Set<String> dsYeuThich = {};
+
+bool laYeuThich(Song bai) => dsYeuThich.contains(bai.id);
+
+void doiYeuThich(Song bai) {
+  if (!dsYeuThich.remove(bai.id)) {
+    dsYeuThich.add(bai.id);
+  }
+}
+
 void doiCheDoLap() {
   if (cheDoLap == CheDoLap.khong) {
     cheDoLap = CheDoLap.tatCa;
