@@ -16,6 +16,47 @@ class _PlayerScreenState extends State<PlayerScreen> {
   StreamSubscription? _theoDoiTrangThai;
   StreamSubscription? _theoDoiViTri;
 
+  Widget hangDieuKhien() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: Icon(Icons.shuffle, color: xaoTron ? mauChinh : Colors.black38),
+          onPressed: () => setState(() => doiXaoTron()),
+        ),
+        IconButton(
+          iconSize: 36,
+          icon: const Icon(Icons.fast_rewind),
+          onPressed: () => baiTruoc(),
+        ),
+        Container(
+          decoration: const BoxDecoration(
+            color: mauChinh,
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            iconSize: 36,
+            color: Colors.white,
+            icon: Icon(dangPhat ? Icons.pause : Icons.play_arrow),
+            onPressed: () => tamDungHoacPhat(),
+          ),
+        ),
+        IconButton(
+          iconSize: 36,
+          icon: const Icon(Icons.fast_forward),
+          onPressed: () => baiTiepTheo(),
+        ),
+        IconButton(
+          icon: Icon(
+            cheDoLap == CheDoLap.motBai ? Icons.repeat_one : Icons.repeat,
+            color: cheDoLap == CheDoLap.khong ? Colors.black38 : mauChinh,
+          ),
+          onPressed: () => setState(() => doiCheDoLap()),
+        ),
+      ],
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -107,28 +148,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
             ),
 
             const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  iconSize: 44,
-                  icon: const Icon(Icons.skip_previous),
-                  onPressed: () => baiTruoc(),
-                ),
-                const SizedBox(width: 16),
-                IconButton(
-                  iconSize: 56,
-                  icon: Icon(dangPhat ? Icons.pause_circle : Icons.play_circle),
-                  onPressed: () => tamDungHoacPhat(),
-                ),
-                const SizedBox(width: 16),
-                IconButton(
-                  iconSize: 44,
-                  icon: const Icon(Icons.skip_next),
-                  onPressed: () => baiTiepTheo(),
-                ),
-              ],
-            ),
+            hangDieuKhien(),
           ],
         ),
       ),
