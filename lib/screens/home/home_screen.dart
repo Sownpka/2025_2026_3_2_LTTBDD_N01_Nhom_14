@@ -5,6 +5,7 @@ import '../../services/data_service.dart';
 import '../../widgets/song_tile.dart';
 import '../../theme/app_theme.dart';
 import '../../models/song.dart';
+import '../player/player_screen.dart';
 
 import 'dart:async';
 
@@ -25,14 +26,31 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  Future<void> chonBai(int i) async {
+  @override
+  void initState() {
+    super.initState();
+    theoDoiMayPhat = mayPhat.playerStateStream.listen((trangThai) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  Route<void> _duongDanPlayer() {
+    return PageRouteBuilder(
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          const PlayerScreen(),
+    );
+  }
+
+  void chonBai(int i) async {
     final dsBai = duLieu.songs;
-    if (viTriBai == i) {
-      await tamDungHoacPhat();
-    } else {
+    Navigator.push(context, _duongDanPlayer());
+    if (viTriBai != i) {
       await phatBai(dsBai[i], dsBai);
     }
-    setState(() {});
   }
 
   Widget tieuDeMuc(String chu) {
@@ -47,9 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget theGanDay(Song bai) {
     return GestureDetector(
-      onTap: () async {
-        await phatBai(bai, duLieu.songs);
-        setState(() {});
+      onTap: () {
+        Navigator.push(context, _duongDanPlayer());
+        phatBai(bai, duLieu.songs);
       },
       child: Container(
         width: 110,
@@ -92,11 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
     final dsBai = duLieu.songs;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Music App — Trang chu')),
+      appBar: AppBar(title: const Text('Music App — Trang chủ')),
       body: ListView(
         children: [
           if (dsGanDay.isNotEmpty) ...[
-            tieuDeMuc('Nghe gan day'),
+            tieuDeMuc('Nghe gần đây'),
             SizedBox(
               height: 140,
               child: ListView(
@@ -106,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
-          tieuDeMuc('Danh sach bai hat'),
+          tieuDeMuc('Danh sách bài hát'),
           for (var i = 0; i < dsBai.length; i++)
             SongTile(
               bai: dsBai[i],

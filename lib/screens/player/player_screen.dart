@@ -35,12 +35,24 @@ class _PlayerScreenState extends State<PlayerScreen> {
             color: mauChinh,
             shape: BoxShape.circle,
           ),
-          child: IconButton(
-            iconSize: 36,
-            color: Colors.white,
-            icon: Icon(dangPhat ? Icons.pause : Icons.play_arrow),
-            onPressed: () => tamDungHoacPhat(),
-          ),
+          child: dangTai
+              ? const Padding(
+                  padding: EdgeInsets.all(14),
+                  child: SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.4,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                )
+              : IconButton(
+                  iconSize: 36,
+                  color: Colors.white,
+                  icon: Icon(dangPhat ? Icons.pause : Icons.play_arrow),
+                  onPressed: () => tamDungHoacPhat(),
+                ),
         ),
         IconButton(
           iconSize: 36,

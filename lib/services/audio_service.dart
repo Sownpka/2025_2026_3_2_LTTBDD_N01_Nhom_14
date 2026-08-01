@@ -55,6 +55,10 @@ Song? get baiDangPhat =>
 
 bool get dangPhat => mayPhat.playing;
 
+bool get dangTai =>
+    mayPhat.processingState == ProcessingState.loading ||
+    mayPhat.processingState == ProcessingState.buffering;
+
 void khoiTaoAudio() {
   mayPhat.playerStateStream.listen((trangThai) {
     if (trangThai.processingState == ProcessingState.completed) {
