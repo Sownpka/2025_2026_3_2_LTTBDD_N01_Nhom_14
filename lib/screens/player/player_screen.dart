@@ -67,19 +67,27 @@ class _PlayerScreenState extends State<PlayerScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Image.asset(
-              bai.image,
-              width: 260,
-              height: 260,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 260,
-                  height: 260,
-                  color: Colors.grey,
-                  child: const Icon(Icons.music_note, size: 80),
-                );
-              },
+            const SizedBox(height: 24),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Image.asset(
+                bai.image,
+                width: 240,
+                height: 240,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 240,
+                    height: 240,
+                    color: mauNhat,
+                    child: const Icon(
+                      Icons.music_note,
+                      size: 80,
+                      color: mauChinh,
+                    ),
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 32),
             Text(
@@ -87,7 +95,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),
-            Text('${bai.artist.name} - ${bai.album}'),
+            Text(
+              bai.artist.name,
+              style: const TextStyle(color: Colors.black54),
+            ),
             const SizedBox(height: 24),
             SeekBar(
               viTri: mayPhat.position,
