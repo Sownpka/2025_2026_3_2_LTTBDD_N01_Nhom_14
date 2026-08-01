@@ -4,6 +4,7 @@ import '../../services/audio_service.dart';
 import '../../widgets/seek_bar.dart';
 import 'dart:async';
 import '../../theme/app_theme.dart';
+import '../../models/song.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -52,6 +53,41 @@ class _PlayerScreenState extends State<PlayerScreen> {
             color: cheDoLap == CheDoLap.khong ? Colors.black38 : mauChinh,
           ),
           onPressed: () => setState(() => doiCheDoLap()),
+        ),
+      ],
+    );
+  }
+
+  Widget hangPhu(Song bai) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          icon: Icon(
+            laYeuThich(bai) ? Icons.favorite : Icons.favorite_border,
+            color: laYeuThich(bai) ? mauChinh : Colors.black38,
+          ),
+          onPressed: () => setState(() => doiYeuThich(bai)),
+        ),
+        TextButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => const SizedBox(
+                height: 160,
+                child: Center(child: Text('Chua co loi cho bai hat nay')),
+              ),
+            );
+          },
+          child: const Text('Loi bai hat'),
+        ),
+        IconButton(
+          icon: const Icon(Icons.list, color: Colors.black38),
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Danh sach phat dang duoc lam')),
+            );
+          },
         ),
       ],
     );
@@ -149,6 +185,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
             const SizedBox(height: 12),
             hangDieuKhien(),
+            const SizedBox(height: 20),
+            hangPhu(bai),
           ],
         ),
       ),
