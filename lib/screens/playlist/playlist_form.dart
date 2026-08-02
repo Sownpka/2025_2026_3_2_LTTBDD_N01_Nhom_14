@@ -90,3 +90,46 @@ class _PlaylistFormState extends State<_PlaylistForm> {
     ),
   );
 }
+
+// StatelessWidget: màn hình tạo playlist mới.
+class AddPlaylistScreen extends StatelessWidget {
+  final DataService dataService;
+  const AddPlaylistScreen({super.key, required this.dataService});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text("Create Playlist"), centerTitle: true),
+    body: _PlaylistForm(
+      title: "Create New Playlist",
+      subtitle: "Create your own playlist to store your favourite songs.",
+      initialName: "",
+      buttonLabel: "Create Playlist",
+      buttonIcon: Icons.add,
+      onSave: dataService.createPlaylist,
+    ),
+  );
+}
+
+// StatelessWidget: màn hình đổi tên playlist.
+class EditPlaylistScreen extends StatelessWidget {
+  final Playlist playlist;
+  final DataService dataService;
+  const EditPlaylistScreen({
+    super.key,
+    required this.playlist,
+    required this.dataService,
+  });
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text("Edit Playlist"), centerTitle: true),
+    body: _PlaylistForm(
+      title: "Edit Playlist",
+      subtitle: "Change playlist name.",
+      initialName: playlist.name,
+      buttonLabel: "Save",
+      buttonIcon: Icons.save,
+      onSave: (name) => dataService.renamePlaylist(playlist.id, name),
+    ),
+  );
+}
