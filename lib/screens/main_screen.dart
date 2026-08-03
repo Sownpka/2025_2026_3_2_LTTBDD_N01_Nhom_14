@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/mini_player.dart';
 import 'home/home_screen.dart';
+import 'settings/settings_screen.dart';
+import '../services/setting_service.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -12,12 +14,19 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int tabHienTai = 0;
+  final SettingsService _settings = SettingsService();
 
-  static const _cacTab = [
-    HomeScreen(),
-    ManHinhChua(ten: 'Tim kiem'),
-    ManHinhChua(ten: 'Playlist'),
-    ManHinhChua(ten: 'Cai dat'),
+  @override
+  void dispose() {
+    _settings.dispose();
+    super.dispose();
+  }
+
+  List<Widget> get _cacTab => [
+    const HomeScreen(),
+    const ManHinhChua(ten: 'Tim kiem'),
+    const ManHinhChua(ten: 'Playlist'),
+    SettingsScreen(settings: _settings),
   ];
 
   @override
