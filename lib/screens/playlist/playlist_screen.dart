@@ -97,3 +97,47 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
   }
 }
+// StatelessWidget: trạng thái rỗng khi chưa có playlist nào.
+class EmptyPlaylistView extends StatelessWidget {
+  final VoidCallback onCreate;
+  const EmptyPlaylistView({super.key, required this.onCreate});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.queue_music_rounded,
+              size: 90,
+              color: theme.colorScheme.primary.withOpacity(0.7),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              "No Playlist",
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "Create your first playlist to start listening to your favorite songs.",
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+            ),
+            const SizedBox(height: 28),
+            ElevatedButton.icon(
+              onPressed: onCreate,
+              icon: const Icon(Icons.add),
+              label: const Text("Create Playlist"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
