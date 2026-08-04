@@ -153,3 +153,67 @@ void addToPlaylist(BuildContext context, DataService dataService, Song song) {
     ),
   );
 }
+
+class SearchScreen extends StatefulWidget {
+  final DataService dataService;
+  const SearchScreen({super.key, required this.dataService});
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  final _controller = TextEditingController();
+  late List<Song> _results = widget.dataService.songs;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _search(String key) => setState(() {
+    _results = key.trim().isEmpty
+        ? widget.dataService.songs
+        : widget.dataService.searchSong(key);
+  });
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text("Search")),
+    body: Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          SearchBox(
+            controller: _controller,
+            onChanged: _search,
+            onClear: () => _search(""),
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: _results.isEmpty
+                ? const Center(child: Text("No songs found"))
+                : ListView.builder(
+                    itemCount: _results.length,
+                    itemBuilder: (_, i) => SongTile(
+                      song: _results[i],
+                      onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(_results[i].title),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      ),
+                      onAdd: () => addToPlaylist(
+                        context,
+                        widget.dataService,
+                        _results[i],
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
