@@ -97,6 +97,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
   }
 }
+
 // StatelessWidget: trạng thái rỗng khi chưa có playlist nào.
 class EmptyPlaylistView extends StatelessWidget {
   final VoidCallback onCreate;
@@ -140,4 +141,81 @@ class EmptyPlaylistView extends StatelessWidget {
       ),
     );
   }
+}
+
+// StatelessWidget: hiển thị playlist
+class PlaylistTile extends StatelessWidget {
+  final Playlist playlist;
+  final VoidCallback? onTap, onEdit, onDelete;
+  const PlaylistTile({
+    super.key,
+    required this.playlist,
+    this.onTap,
+    this.onEdit,
+    this.onDelete,
+  });
+
+  String get _duration {
+    final d = playlist.totalDuration;
+    final h = d.inHours, m = d.inMinutes.remainder(60);
+    return h > 0 ? "${h}h ${m}m" : "${d.inMinutes} min";
+  }
+
+  @override
+  Widget build(BuildContext context) => Card(
+    elevation: 3,
+    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    child: ListTile(
+      onTap: onTap,
+      leading: CircleAvatar(
+        radius: 28,
+        child: Text(
+          playlist.totalSongs.toString(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      title: Text(
+        playlist.name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("${playlist.totalSongs} songs"),
+          Text(_duration, style: const TextStyle(color: Colors.grey)),
+        ],
+      ),
+      trailing: PopupMenuButton<String>(
+        onSelected: (v) => v == "edit" ? onEdit?.call() : onDelete?.call(),
+        itemBuilder: (_) => [
+          const PopupMenuItem(value: "edit", child: Text("Rename")),
+          const PopupMenuItem(value: "delete", child: Text("Delete")),
+        ],
+      ),
+    ),
+  );
+}
+
+// StatelessWidget: xoá playlist.
+class DeletePlaylistDialog extends StatelessWidget {
+  final Playlist playlist;
+  const DeletePlaylistDialog({super.key, required this.playlist});
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: const Text("Delete playlist"),
+    content: Text("Delete '${playlist.name}'?"),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context, false),
+        child: const Text("Cancel"),
+      ),
+      ElevatedButton(
+        onPressed: () => Navigator.pop(context, true),
+        child: const Text("Delete"),
+      ),
+    ],
+  );
 }
