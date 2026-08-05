@@ -3,6 +3,8 @@ import 'package:just_audio/just_audio.dart';
 
 import '../models/song.dart';
 import 'dart:math';
+import '../models/playlist.dart';
+import 'data_service.dart';
 
 final AudioPlayer mayPhat = AudioPlayer();
 
@@ -22,13 +24,26 @@ void doiXaoTron() {
   xaoTron = !xaoTron;
 }
 
-Set<String> dsYeuThich = {};
+const String tenPlaylistYeuThich = 'Yêu thích';
 
-bool laYeuThich(Song bai) => dsYeuThich.contains(bai.id);
+Playlist _playlistYeuThich(DataService ds) {
+  final timThay = ds.playlists.where((p) => p.name == tenPlaylistYeuThich);
+  if (timThay.isNotEmpty) return timThay.first;
+  ds.createPlaylist(tenPlaylistYeuThich);
+  return ds.playlists.last;
+}
 
-void doiYeuThich(Song bai) {
-  if (!dsYeuThich.remove(bai.id)) {
-    dsYeuThich.add(bai.id);
+void khoiTaoYeuThich(DataService ds) => _playlistYeuThich(ds);
+
+bool laYeuThich(Song bai, DataService ds) =>
+    _playlistYeuThich(ds).songs.any((b) => b.id == bai.id);
+
+void doiYeuThich(Song bai, DataService ds) {
+  final playlist = _playlistYeuThich(ds);
+  if (playlist.songs.any((b) => b.id == bai.id)) {
+    ds.removeSongFromPlaylist(playlist.id, bai.id);
+  } else {
+    ds.addSongToPlaylist(playlist.id, bai);
   }
 }
 
@@ -65,14 +80,22 @@ void khoiTaoAudio() {
       baiTiepTheo(tuDong: true);
     }
   });
+  mayPhat.setVolume(1.0);
 }
+
+String? _assetDangNap;
 
 Future<void> _taiVaPhat() async {
   final bai = baiDangPhat;
   if (bai == null) return;
   _ghiNhanGanDay(bai);
   try {
-    await mayPhat.setAsset(bai.audio);
+    if (_assetDangNap != bai.audio) {
+      await mayPhat.setAsset(bai.audio);
+      _assetDangNap = bai.audio;
+    } else {
+      await mayPhat.seek(Duration.zero);
+    }
     await mayPhat.play();
   } catch (e) {
     debugPrint('Khong phat duoc ${bai.audio}: $e');

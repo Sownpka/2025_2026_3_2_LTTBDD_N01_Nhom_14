@@ -7,6 +7,7 @@ import '../services/setting_service.dart';
 import '../services/data_service.dart';
 import 'playlist/playlist_screen.dart';
 import 'search/search_screen.dart';
+import '../services/audio_service.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -25,6 +26,12 @@ class _MainScreenState extends State<MainScreen> {
     _settings.dispose();
     _duLieu.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    khoiTaoYeuThich(_duLieu);
   }
 
   List<Widget> get _cacTab => [

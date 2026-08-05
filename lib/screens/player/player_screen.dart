@@ -79,10 +79,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
       children: [
         IconButton(
           icon: Icon(
-            laYeuThich(bai) ? Icons.favorite : Icons.favorite_border,
-            color: laYeuThich(bai) ? mauChinh : Colors.black38,
+            laYeuThich(bai, widget.dataService)
+                ? Icons.favorite
+                : Icons.favorite_border,
+            color: laYeuThich(bai, widget.dataService)
+                ? mauChinh
+                : Colors.black38,
           ),
-          onPressed: () => setState(() => doiYeuThich(bai)),
+          onPressed: () => setState(() => doiYeuThich(bai, widget.dataService)),
         ),
         TextButton(
           onPressed: () {
