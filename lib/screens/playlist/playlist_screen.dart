@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/playlist.dart';
 import '../../services/data_service.dart';
+import '../../services/setting_service.dart';
 import 'playlist_form.dart';
 import 'playlist_detail_screen.dart';
 
@@ -18,11 +19,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   void initState() {
     super.initState();
     widget.dataService.addListener(_refresh);
+    caiDat.addListener(_refresh);
   }
 
   @override
   void dispose() {
     widget.dataService.removeListener(_refresh);
+    caiDat.removeListener(_refresh);
     super.dispose();
   }
 
@@ -38,7 +41,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         builder: (_) => AddPlaylistScreen(dataService: widget.dataService),
       ),
     );
-    if (r == true && mounted) _snack("Playlist created successfully");
+    if (r == true && mounted) {
+      _snack(tr("Đã tạo playlist thành công", "Playlist created successfully"));
+    }
   }
 
   Future<void> _edit(Playlist p) async {
@@ -49,7 +54,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
             EditPlaylistScreen(playlist: p, dataService: widget.dataService),
       ),
     );
-    if (r == true && mounted) _snack("Playlist updated");
+    if (r == true && mounted) {
+      _snack(tr("Đã cập nhật playlist", "Playlist updated"));
+    }
   }
 
   Future<void> _delete(Playlist p) async {
@@ -59,7 +66,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
     if (ok == true) {
       widget.dataService.deletePlaylist(p.id);
-      _snack("Playlist deleted");
+      _snack(tr("Đã xoá playlist", "Playlist deleted"));
     }
   }
 
@@ -75,7 +82,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   Widget build(BuildContext context) {
     final playlists = widget.dataService.playlists;
     return Scaffold(
-      appBar: AppBar(title: const Text("Playlist"), centerTitle: true),
+      appBar: AppBar(
+        title: Text(tr("Playlist", "Playlists")),
+        centerTitle: true,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _create,
         child: const Icon(Icons.add),
@@ -119,14 +129,17 @@ class EmptyPlaylistView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              "No Playlist",
+              tr("Chưa có playlist", "No Playlist"),
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 12),
             Text(
-              "Create your first playlist to start listening to your favorite songs.",
+              tr(
+                "Tạo playlist đầu tiên để bắt đầu nghe những bài hát yêu thích của bạn.",
+                "Create your first playlist to start listening to your favorite songs.",
+              ),
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
@@ -134,7 +147,7 @@ class EmptyPlaylistView extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onCreate,
               icon: const Icon(Icons.add),
-              label: const Text("Create Playlist"),
+              label: Text(tr("Tạo playlist", "Create Playlist")),
             ),
           ],
         ),
@@ -158,7 +171,10 @@ class PlaylistTile extends StatelessWidget {
   String get _duration {
     final d = playlist.totalDuration;
     final h = d.inHours, m = d.inMinutes.remainder(60);
-    return h > 0 ? "${h}h ${m}m" : "${d.inMinutes} min";
+    final donViPhut = tr("phút", "min");
+    return h > 0
+        ? "${h}${tr('g', 'h')} ${m}${tr('p', 'm')}"
+        : "${d.inMinutes} $donViPhut";
   }
 
   @override
@@ -183,15 +199,20 @@ class PlaylistTile extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("${playlist.totalSongs} songs"),
+          Text(
+            tr(
+              "${playlist.totalSongs} bài hát",
+              "${playlist.totalSongs} songs",
+            ),
+          ),
           Text(_duration, style: const TextStyle(color: Colors.grey)),
         ],
       ),
       trailing: PopupMenuButton<String>(
         onSelected: (v) => v == "edit" ? onEdit?.call() : onDelete?.call(),
         itemBuilder: (_) => [
-          const PopupMenuItem(value: "edit", child: Text("Rename")),
-          const PopupMenuItem(value: "delete", child: Text("Delete")),
+          PopupMenuItem(value: "edit", child: Text(tr("Đổi tên", "Rename"))),
+          PopupMenuItem(value: "delete", child: Text(tr("Xoá", "Delete"))),
         ],
       ),
     ),
@@ -205,16 +226,16 @@ class DeletePlaylistDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text("Delete playlist"),
-    content: Text("Delete '${playlist.name}'?"),
+    title: Text(tr("Xoá playlist", "Delete playlist")),
+    content: Text(tr("Xoá '${playlist.name}'?", "Delete '${playlist.name}'?")),
     actions: [
       TextButton(
         onPressed: () => Navigator.pop(context, false),
-        child: const Text("Cancel"),
+        child: Text(tr("Huỷ", "Cancel")),
       ),
       ElevatedButton(
         onPressed: () => Navigator.pop(context, true),
-        child: const Text("Delete"),
+        child: Text(tr("Xoá", "Delete")),
       ),
     ],
   );
