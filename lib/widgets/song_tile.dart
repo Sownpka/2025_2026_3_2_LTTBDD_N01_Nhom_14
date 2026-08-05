@@ -19,14 +19,16 @@ class SongTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mauChinh = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final mauChinh = theme.colorScheme.primary;
+    final mauChu = theme.colorScheme.onSurface;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.black12),
+        border: Border.all(color: mauChu.withOpacity(0.08)),
       ),
       child: ListTile(
         onTap: onTap,
@@ -54,14 +56,14 @@ class SongTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: dangChon ? FontWeight.bold : FontWeight.w600,
-            color: dangChon ? mauChinh : Colors.black87,
+            color: dangChon ? mauChinh : mauChu,
           ),
         ),
         subtitle: Text(
           bai.artist.name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 12, color: Colors.black54),
+          style: TextStyle(fontSize: 12, color: mauChu.withOpacity(0.6)),
         ),
         trailing: Icon(
           dangPhatBai ? Icons.pause : Icons.play_arrow,
