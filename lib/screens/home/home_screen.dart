@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/audio_service.dart';
 import '../../services/data_service.dart';
+import '../../services/setting_service.dart';
 import '../../widgets/song_tile.dart';
 import '../../theme/app_theme.dart';
 import '../../models/song.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     theoDoiMayPhat?.cancel();
+    caiDat.removeListener(_onDoiNgonNgu);
     super.dispose();
   }
 
@@ -35,7 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {});
       }
     });
+    caiDat.addListener(_onDoiNgonNgu);
   }
+
+  void _onDoiNgonNgu() => mounted ? setState(() {}) : null;
 
   Route<void> _duongDanPlayer() {
     return PageRouteBuilder(
@@ -111,11 +116,13 @@ class _HomeScreenState extends State<HomeScreen> {
     final dsBai = duLieu.songs;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Music App — Trang chủ')),
+      appBar: AppBar(
+        title: Text(tr('Music App — Trang chủ', 'Music App — Home')),
+      ),
       body: ListView(
         children: [
           if (dsGanDay.isNotEmpty) ...[
-            tieuDeMuc('Nghe gần đây'),
+            tieuDeMuc(tr('Nghe gần đây', 'Recently played')),
             SizedBox(
               height: 140,
               child: ListView(
@@ -125,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
-          tieuDeMuc('Danh sách bài hát'),
+          tieuDeMuc(tr('Danh sách bài hát', 'All songs')),
           for (var i = 0; i < dsBai.length; i++)
             SongTile(
               bai: dsBai[i],
