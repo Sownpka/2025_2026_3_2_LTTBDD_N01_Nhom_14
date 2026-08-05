@@ -101,6 +101,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
             );
           },
         ),
+        IconButton(
+          icon: const Icon(Icons.playlist_add, color: Colors.black54),
+          onPressed: () {},
+        ),
       ],
     );
   }
