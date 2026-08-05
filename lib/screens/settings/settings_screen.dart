@@ -37,18 +37,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  String _labelForQuality(AudioQuality q) {
-    switch (q) {
-      case AudioQuality.low:
-        return svc.locale.languageCode == 'vi' ? 'Thấp' : 'Low';
-      case AudioQuality.medium:
-        return svc.locale.languageCode == 'vi' ? 'Trung bình' : 'Medium';
-      case AudioQuality.high:
-      default:
-        return svc.locale.languageCode == 'vi' ? 'Cao' : 'High';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = svc.themeMode == ThemeMode.dark;
@@ -126,39 +114,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
 
               const SizedBox(height: 12),
-
-              // Quality
-              Card(
-                child: ListTile(
-                  title: Text(
-                    svc.locale.languageCode == 'vi'
-                        ? 'Chất lượng phát'
-                        : 'Playback quality',
-                  ),
-                  trailing: DropdownButton<AudioQuality>(
-                    value: svc.quality,
-                    items: [
-                      DropdownMenuItem(
-                        value: AudioQuality.low,
-                        child: Text(_labelForQuality(AudioQuality.low)),
-                      ),
-                      DropdownMenuItem(
-                        value: AudioQuality.medium,
-                        child: Text(_labelForQuality(AudioQuality.medium)),
-                      ),
-                      DropdownMenuItem(
-                        value: AudioQuality.high,
-                        child: Text(_labelForQuality(AudioQuality.high)),
-                      ),
-                    ],
-                    onChanged: (v) {
-                      if (v != null) svc.setQuality(v);
-                    },
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 18),
 
               // Group info
               Text(
