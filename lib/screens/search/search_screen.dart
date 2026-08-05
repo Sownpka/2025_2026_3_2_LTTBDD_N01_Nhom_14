@@ -154,7 +154,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // Phat bai duoc chon, danh sach phat la ket qua tim kiem hien tai.
   void _chonBai(Song s) async {
     Navigator.push(context, _duongDanPlayer());
     if (baiDangPhat?.id != s.id) {
