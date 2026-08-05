@@ -10,14 +10,15 @@ import '../player/player_screen.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final DataService dataService;
+  const HomeScreen({super.key, required this.dataService});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final duLieu = DataService();
+  DataService get duLieu => widget.dataService;
   StreamSubscription? theoDoiMayPhat;
 
   @override
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       transitionDuration: Duration.zero,
       reverseTransitionDuration: Duration.zero,
       pageBuilder: (context, animation, secondaryAnimation) =>
-          const PlayerScreen(),
+          PlayerScreen(dataService: duLieu),
     );
   }
 

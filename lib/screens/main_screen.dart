@@ -4,6 +4,9 @@ import '../widgets/mini_player.dart';
 import 'home/home_screen.dart';
 import 'settings/settings_screen.dart';
 import '../services/setting_service.dart';
+import '../services/data_service.dart';
+import 'playlist/playlist_screen.dart';
+import 'search/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,17 +18,19 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int tabHienTai = 0;
   final SettingsService _settings = SettingsService();
+  final DataService _duLieu = DataService();
 
   @override
   void dispose() {
     _settings.dispose();
+    _duLieu.dispose();
     super.dispose();
   }
 
   List<Widget> get _cacTab => [
-    const HomeScreen(),
-    const ManHinhChua(ten: 'Tim kiem'),
-    const ManHinhChua(ten: 'Playlist'),
+    HomeScreen(dataService: _duLieu),
+    SearchScreen(dataService: _duLieu),
+    PlaylistScreen(dataService: _duLieu),
     SettingsScreen(settings: _settings),
   ];
 
@@ -36,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const MiniPlayer(),
+          MiniPlayer(dataService: _duLieu),
           BottomNavigationBar(
             currentIndex: tabHienTai,
             onTap: (i) => setState(() => tabHienTai = i),

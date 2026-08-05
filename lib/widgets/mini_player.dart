@@ -4,9 +4,11 @@ import '../services/audio_service.dart';
 import '../screens/player/player_screen.dart';
 import 'dart:async';
 import '../theme/app_theme.dart';
+import '../services/data_service.dart';
 
 class MiniPlayer extends StatefulWidget {
-  const MiniPlayer({super.key});
+  final DataService dataService;
+  const MiniPlayer({super.key, required this.dataService});
 
   @override
   State<MiniPlayer> createState() => _MiniPlayerState();
@@ -39,7 +41,9 @@ class _MiniPlayerState extends State<MiniPlayer> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const PlayerScreen()),
+          MaterialPageRoute(
+            builder: (context) => PlayerScreen(dataService: widget.dataService),
+          ),
         );
       },
       child: Container(
