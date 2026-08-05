@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/song.dart';
 import '../../services/data_service.dart';
+import '../../services/setting_service.dart';
 import 'search_screen.dart';
 
 // tìm kiếm bài hát
@@ -66,7 +67,11 @@ class _SearchListState extends State<_SearchList> {
   });
   @override
   Widget build(BuildContext context) {
-    if (_results.isEmpty) return const Center(child: Text("No songs found"));
+    if (_results.isEmpty) {
+      return Center(
+        child: Text(tr("Không tìm thấy bài hát", "No songs found")),
+      );
+    }
     return ListView.builder(
       itemCount: _results.length,
       itemBuilder: (_, i) => SongTile(
