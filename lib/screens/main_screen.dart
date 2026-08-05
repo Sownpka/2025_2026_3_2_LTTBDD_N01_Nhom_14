@@ -5,9 +5,9 @@ import 'home/home_screen.dart';
 import 'settings/settings_screen.dart';
 import '../services/setting_service.dart';
 import '../services/data_service.dart';
+import '../services/audio_service.dart';
 import 'playlist/playlist_screen.dart';
 import 'search/search_screen.dart';
-import '../services/audio_service.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,13 +19,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int tabHienTai = 0;
   final DataService _duLieu = DataService();
-
-  @override
-  void dispose() {
-    _settings.dispose();
-    _duLieu.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -41,11 +34,13 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
+  void _onDoiNgonNgu() => mounted ? setState(() {}) : null;
+
   List<Widget> get _cacTab => [
     HomeScreen(dataService: _duLieu),
     SearchScreen(dataService: _duLieu),
     PlaylistScreen(dataService: _duLieu),
-    SettingsScreen(settings: _settings),
+    SettingsScreen(settings: caiDat),
   ];
 
   @override
@@ -59,22 +54,22 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBar(
             currentIndex: tabHienTai,
             onTap: (i) => setState(() => tabHienTai = i),
-            items: const [
+            items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined),
-                label: 'Trang chu',
+                icon: const Icon(Icons.home_outlined),
+                label: tr('Trang chủ', 'Home'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: 'Tim kiem',
+                icon: const Icon(Icons.search),
+                label: tr('Tìm kiếm', 'Search'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.queue_music),
-                label: 'Playlist',
+                icon: const Icon(Icons.queue_music),
+                label: tr('Playlist', 'Playlist'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.settings_outlined),
-                label: 'Cai dat',
+                icon: const Icon(Icons.settings_outlined),
+                label: tr('Cài đặt', 'Settings'),
               ),
             ],
           ),
@@ -93,7 +88,7 @@ class ManHinhChua extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(ten)),
-      body: const Center(child: Text('Man hinh dang duoc hoan thien')),
+      body: const Center(child: Text('Màn hình đang được hoàn thiện')),
     );
   }
 }
