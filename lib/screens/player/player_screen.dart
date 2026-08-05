@@ -6,6 +6,7 @@ import 'dart:async';
 import '../../theme/app_theme.dart';
 import '../../models/song.dart';
 import '../../services/data_service.dart';
+import '../../widgets/song_tile.dart';
 
 class PlayerScreen extends StatefulWidget {
   final DataService dataService;
@@ -97,11 +98,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         ),
         IconButton(
           icon: const Icon(Icons.list, color: Colors.black38),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Danh sach phat dang duoc lam')),
-            );
-          },
+          onPressed: () => _moDanhSachPhat(),
         ),
         IconButton(
           icon: const Icon(Icons.playlist_add, color: Colors.black54),
@@ -237,6 +234,78 @@ class _PlayerScreenState extends State<PlayerScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _moDanhSachPhat() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Danh sách phát',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '${dsPhat.length} bài hát',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                if (dsPhat.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text('Danh sách phát đang trống'),
+                  )
+                else
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: dsPhat.length,
+                      itemBuilder: (context, i) {
+                        final s = dsPhat[i];
+                        return SongTile(
+                          bai: s,
+                          dangChon: i == viTriBai,
+                          dangPhatBai: i == viTriBai && dangPhat,
+                          onTap: () async {
+                            Navigator.pop(context);
+                            if (viTriBai != i) {
+                              await phatBai(s, dsPhat);
+                            }
+                            if (mounted) setState(() {});
+                          },
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
