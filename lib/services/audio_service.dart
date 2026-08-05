@@ -91,6 +91,7 @@ Future<void> _taiVaPhat() async {
   _ghiNhanGanDay(bai);
   try {
     if (_assetDangNap != bai.audio) {
+      await mayPhat.stop();
       await mayPhat.setAsset(bai.audio);
       _assetDangNap = bai.audio;
     } else {

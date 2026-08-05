@@ -53,9 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void chonBai(int i) async {
     final dsBai = duLieu.songs;
+    final bai = dsBai[i];
     Navigator.push(context, _duongDanPlayer());
-    if (viTriBai != i) {
-      await phatBai(dsBai[i], dsBai);
+    if (baiDangPhat?.id != bai.id) {
+      await phatBai(bai, dsBai);
     }
   }
 
