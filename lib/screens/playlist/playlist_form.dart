@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/playlist.dart';
 import '../../services/data_service.dart';
+import '../../services/setting_service.dart';
 
 // StatefulWidget: form dùng chung cho tạo mới và đổi tên playlist.
 class _PlaylistForm extends StatefulWidget {
@@ -34,7 +35,11 @@ class _PlaylistFormState extends State<_PlaylistForm> {
     ok
         ? Navigator.pop(context, true)
         : ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Playlist name already exists")),
+            SnackBar(
+              content: Text(
+                tr("Tên playlist đã tồn tại", "Playlist name already exists"),
+              ),
+            ),
           );
   }
 
@@ -55,15 +60,15 @@ class _PlaylistFormState extends State<_PlaylistForm> {
           const SizedBox(height: 25),
           TextFormField(
             controller: _controller,
-            decoration: const InputDecoration(
-              labelText: "Playlist Name",
-              prefixIcon: Icon(Icons.library_music),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: tr("Tên playlist", "Playlist Name"),
+              prefixIcon: const Icon(Icons.library_music),
+              border: const OutlineInputBorder(),
             ),
             validator: (v) => (v == null || v.trim().isEmpty)
-                ? "Please enter playlist name"
+                ? tr("Vui lòng nhập tên playlist", "Please enter playlist name")
                 : v.trim().length < 3
-                ? "Minimum 3 characters"
+                ? tr("Tối thiểu 3 ký tự", "Minimum 3 characters")
                 : null,
           ),
           const SizedBox(height: 25),
@@ -98,12 +103,18 @@ class AddPlaylistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text("Create Playlist"), centerTitle: true),
+    appBar: AppBar(
+      title: Text(tr("Tạo Playlist", "Create Playlist")),
+      centerTitle: true,
+    ),
     body: _PlaylistForm(
-      title: "Create New Playlist",
-      subtitle: "Create your own playlist to store your favourite songs.",
+      title: tr("Tạo Playlist mới", "Create New Playlist"),
+      subtitle: tr(
+        "Tạo playlist của riêng bạn để lưu những bài hát yêu thích.",
+        "Create your own playlist to store your favourite songs.",
+      ),
       initialName: "",
-      buttonLabel: "Create Playlist",
+      buttonLabel: tr("Tạo Playlist", "Create Playlist"),
       buttonIcon: Icons.add,
       onSave: dataService.createPlaylist,
     ),
@@ -122,12 +133,15 @@ class EditPlaylistScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text("Edit Playlist"), centerTitle: true),
+    appBar: AppBar(
+      title: Text(tr("Sửa Playlist", "Edit Playlist")),
+      centerTitle: true,
+    ),
     body: _PlaylistForm(
-      title: "Edit Playlist",
-      subtitle: "Change playlist name.",
+      title: tr("Sửa Playlist", "Edit Playlist"),
+      subtitle: tr("Đổi tên playlist.", "Change playlist name."),
       initialName: playlist.name,
-      buttonLabel: "Save",
+      buttonLabel: tr("Lưu", "Save"),
       buttonIcon: Icons.save,
       onSave: (name) => dataService.renamePlaylist(playlist.id, name),
     ),
