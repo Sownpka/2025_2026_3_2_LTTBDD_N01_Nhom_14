@@ -5,6 +5,7 @@ import '../screens/player/player_screen.dart';
 import 'dart:async';
 import '../theme/app_theme.dart';
 import '../services/data_service.dart';
+import '../services/setting_service.dart';
 
 class MiniPlayer extends StatefulWidget {
   final DataService dataService;
@@ -23,11 +24,15 @@ class _MiniPlayerState extends State<MiniPlayer> {
     _theoDoiTrangThai = mayPhat.playerStateStream.listen((_) {
       if (mounted) setState(() {});
     });
+    caiDat.addListener(_onDoiNgonNgu);
   }
+
+  void _onDoiNgonNgu() => mounted ? setState(() {}) : null;
 
   @override
   void dispose() {
     _theoDoiTrangThai?.cancel();
+    caiDat.removeListener(_onDoiNgonNgu);
     super.dispose();
   }
 
@@ -85,7 +90,7 @@ class _MiniPlayerState extends State<MiniPlayer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Dang phat: ${bai.title}',
+                    '${tr('Đang phát', 'Now playing')}: ${bai.title}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
