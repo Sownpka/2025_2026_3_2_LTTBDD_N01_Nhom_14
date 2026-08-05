@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import '../../models/song.dart';
 import '../../services/data_service.dart';
+import '../../services/setting_service.dart';
 
 class SearchBox extends StatefulWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final VoidCallback? onClear;
-  final String hintText;
+  final String? hintText;
   const SearchBox({
     super.key,
     required this.controller,
     required this.onChanged,
     this.onClear,
-    this.hintText = "Search...",
+    this.hintText,
   });
 
   @override
@@ -42,7 +43,7 @@ class _SearchBoxState extends State<SearchBox> {
       onChanged: widget.onChanged,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
-        hintText: widget.hintText,
+        hintText: widget.hintText ?? tr("Tìm kiếm...", "Search..."),
         prefixIcon: const Icon(Icons.search),
         suffixIcon: widget.controller.text.isEmpty
             ? null
@@ -114,14 +115,16 @@ void addToPlaylist(BuildContext context, DataService dataService, Song song) {
   final messenger = ScaffoldMessenger.of(context);
   if (dataService.playlists.isEmpty) {
     messenger.showSnackBar(
-      const SnackBar(content: Text("No playlist available")),
+      SnackBar(
+        content: Text(tr("Chưa có playlist nào", "No playlist available")),
+      ),
     );
     return;
   }
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      title: const Text("Choose playlist"),
+      title: Text(tr("Chọn playlist", "Choose playlist")),
       content: SizedBox(
         width: double.maxFinite,
         height: 300,
@@ -140,8 +143,11 @@ void addToPlaylist(BuildContext context, DataService dataService, Song song) {
                   SnackBar(
                     content: Text(
                       added
-                          ? "${song.title} added to ${p.name}"
-                          : "Song already exists",
+                          ? tr(
+                              "Đã thêm ${song.title} vào ${p.name}",
+                              "${song.title} added to ${p.name}",
+                            )
+                          : tr("Bài hát đã tồn tại", "Song already exists"),
                     ),
                   ),
                 );
@@ -167,8 +173,17 @@ class _SearchScreenState extends State<SearchScreen> {
   late List<Song> _results = widget.dataService.songs;
 
   @override
+  void initState() {
+    super.initState();
+    caiDat.addListener(_onDoiNgonNgu);
+  }
+
+  void _onDoiNgonNgu() => mounted ? setState(() {}) : null;
+
+  @override
   void dispose() {
     _controller.dispose();
+    caiDat.removeListener(_onDoiNgonNgu);
     super.dispose();
   }
 
@@ -180,7 +195,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text("Search")),
+    appBar: AppBar(title: Text(tr("Tìm kiếm", "Search"))),
     body: Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -193,7 +208,9 @@ class _SearchScreenState extends State<SearchScreen> {
           const SizedBox(height: 20),
           Expanded(
             child: _results.isEmpty
-                ? const Center(child: Text("No songs found"))
+                ? Center(
+                    child: Text(tr("Không tìm thấy bài hát", "No songs found")),
+                  )
                 : ListView.builder(
                     itemCount: _results.length,
                     itemBuilder: (_, i) => SongTile(
