@@ -5,9 +5,11 @@ import '../../widgets/seek_bar.dart';
 import 'dart:async';
 import '../../theme/app_theme.dart';
 import '../../models/song.dart';
+import '../../services/data_service.dart';
 
 class PlayerScreen extends StatefulWidget {
-  const PlayerScreen({super.key});
+  final DataService dataService;
+  const PlayerScreen({super.key, required this.dataService});
 
   @override
   State<PlayerScreen> createState() => _PlayerScreenState();
@@ -103,9 +105,138 @@ class _PlayerScreenState extends State<PlayerScreen> {
         ),
         IconButton(
           icon: const Icon(Icons.playlist_add, color: Colors.black54),
-          onPressed: () {},
+          onPressed: () => _moThemPlaylist(bai),
         ),
       ],
+    );
+  }
+
+  void _moThemPlaylist(Song bai) {
+    final ds = widget.dataService;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Thêm vào playlist',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ListTile(
+                  leading: const Icon(Icons.add, color: mauChinh),
+                  title: const Text('Tạo playlist mới'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _taoPlaylistMoiVaThem(bai);
+                  },
+                ),
+                const Divider(height: 1),
+                if (ds.playlists.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Text('Chưa có playlist nào'),
+                  )
+                else
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: ds.playlists.length,
+                      itemBuilder: (context, i) {
+                        final p = ds.playlists[i];
+                        final daCo = p.songs.any((e) => e.id == bai.id);
+                        return ListTile(
+                          leading: const Icon(
+                            Icons.queue_music,
+                            color: mauChinh,
+                          ),
+                          title: Text(p.name),
+                          subtitle: Text('${p.songs.length} bài hát'),
+                          trailing: daCo
+                              ? const Icon(Icons.check, color: mauChinh)
+                              : null,
+                          onTap: () {
+                            Navigator.pop(context);
+                            _themBaiVaoPlaylist(p.id, p.name, bai);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _themBaiVaoPlaylist(String playlistId, String tenPlaylist, Song bai) {
+    final daThem = widget.dataService.addSongToPlaylist(playlistId, bai);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          daThem
+              ? 'Đã thêm "${bai.title}" vào $tenPlaylist'
+              : '"${bai.title}" đã có trong $tenPlaylist',
+        ),
+      ),
+    );
+  }
+
+  void _taoPlaylistMoiVaThem(Song bai) {
+    final ds = widget.dataService;
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Playlist mới'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(hintText: 'Tên playlist'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () {
+              final ten = controller.text.trim();
+              if (ten.isEmpty) return;
+              final tao = ds.createPlaylist(ten);
+              if (tao) {
+                ds.addSongToPlaylist(ds.playlists.last.id, bai);
+              }
+              Navigator.pop(context);
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    tao
+                        ? 'Đã tạo "$ten" và thêm bài hát'
+                        : 'Tên playlist không hợp lệ',
+                  ),
+                ),
+              );
+            },
+            child: const Text('Tạo'),
+          ),
+        ],
+      ),
     );
   }
 
