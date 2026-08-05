@@ -3,7 +3,10 @@ import '../../models/playlist.dart';
 import '../../models/song.dart';
 import '../../services/data_service.dart';
 import '../../services/audio_service.dart';
+import '../../services/setting_service.dart';
 import '../player/player_screen.dart';
+import '../../widgets/mini_player.dart';
+import 'dart:async';
 
 // StatefulWidget: giữ trạng thái bài hát đang chọn + lắng nghe dataService.
 class PlaylistDetailScreen extends StatefulWidget {
@@ -20,15 +23,23 @@ class PlaylistDetailScreen extends StatefulWidget {
 }
 
 class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
+  StreamSubscription? _theoDoiMayPhat;
+
   @override
   void initState() {
     super.initState();
     widget.dataService.addListener(_refresh);
+    caiDat.addListener(_refresh);
+    _theoDoiMayPhat = mayPhat.playerStateStream.listen((trangThai) {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
   void dispose() {
     widget.dataService.removeListener(_refresh);
+    caiDat.removeListener(_refresh);
+    _theoDoiMayPhat?.cancel();
     super.dispose();
   }
 
@@ -43,6 +54,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
     );
   }
 
+  // Phat bai duoc chon, danh sach phat la toan bo bai trong playlist nay.
   void _chonBai(Song s) async {
     Navigator.push(context, _duongDanPlayer());
     if (baiDangPhat?.id != s.id) {
@@ -61,7 +73,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
       actions: [IconButton(onPressed: _addSong, icon: const Icon(Icons.add))],
     ),
     body: _playlist.songs.isEmpty
-        ? const Center(child: Text("No songs"))
+        ? Center(child: Text(tr("Chưa có bài hát", "No songs")))
         : ListView.builder(
             itemCount: _playlist.songs.length,
             itemBuilder: (_, i) {
@@ -74,6 +86,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
               );
             },
           ),
+    bottomNavigationBar: MiniPlayer(dataService: widget.dataService),
   );
 
   void _remove(Song s) {
@@ -86,7 +99,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
       context: context,
       builder: (_) => StatefulBuilder(
         builder: (context, setDialog) => AlertDialog(
-          title: const Text("Add songs"),
+          title: Text(tr("Thêm bài hát", "Add songs")),
           content: SizedBox(
             width: double.maxFinite,
             height: 350,
@@ -108,11 +121,11 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text("Cancel"),
+              child: Text(tr("Huỷ", "Cancel")),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text("Add (${ids.length})"),
+              child: Text('${tr("Thêm", "Add")} (${ids.length})'),
             ),
           ],
         ),
