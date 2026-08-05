@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/audio_service.dart';
+import '../../services/setting_service.dart';
 import '../../widgets/seek_bar.dart';
 import 'dart:async';
 import '../../theme/app_theme.dart';
@@ -92,13 +93,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
           onPressed: () {
             showModalBottomSheet(
               context: context,
-              builder: (context) => const SizedBox(
+              builder: (context) => SizedBox(
                 height: 160,
-                child: Center(child: Text('Chua co loi cho bai hat nay')),
+                child: Center(
+                  child: Text(
+                    tr(
+                      'Chưa có lời cho bài hát này',
+                      'No lyrics for this song yet',
+                    ),
+                  ),
+                ),
               ),
             );
           },
-          child: const Text('Loi bai hat'),
+          child: Text(tr('Lời bài hát', 'Lyrics')),
         ),
         IconButton(
           icon: const Icon(Icons.list, color: Colors.black38),
@@ -127,17 +135,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    'Thêm vào playlist',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    tr('Thêm vào playlist', 'Add to playlist'),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
                 ListTile(
                   leading: const Icon(Icons.add, color: mauChinh),
-                  title: const Text('Tạo playlist mới'),
+                  title: Text(tr('Tạo playlist mới', 'Create new playlist')),
                   onTap: () {
                     Navigator.pop(context);
                     _taoPlaylistMoiVaThem(bai);
@@ -145,9 +156,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 ),
                 const Divider(height: 1),
                 if (ds.playlists.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text('Chưa có playlist nào'),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(tr('Chưa có playlist nào', 'No playlists yet')),
                   )
                 else
                   Flexible(
@@ -163,7 +174,12 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             color: mauChinh,
                           ),
                           title: Text(p.name),
-                          subtitle: Text('${p.songs.length} bài hát'),
+                          subtitle: Text(
+                            tr(
+                              '${p.songs.length} bài hát',
+                              '${p.songs.length} songs',
+                            ),
+                          ),
                           trailing: daCo
                               ? const Icon(Icons.check, color: mauChinh)
                               : null,
@@ -190,8 +206,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
       SnackBar(
         content: Text(
           daThem
-              ? 'Đã thêm "${bai.title}" vào $tenPlaylist'
-              : '"${bai.title}" đã có trong $tenPlaylist',
+              ? tr(
+                  'Đã thêm "${bai.title}" vào $tenPlaylist',
+                  'Added "${bai.title}" to $tenPlaylist',
+                )
+              : tr(
+                  '"${bai.title}" đã có trong $tenPlaylist',
+                  '"${bai.title}" already in $tenPlaylist',
+                ),
         ),
       ),
     );
@@ -203,16 +225,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Playlist mới'),
+        title: Text(tr('Playlist mới', 'New playlist')),
         content: TextField(
           controller: controller,
           autofocus: true,
-          decoration: const InputDecoration(hintText: 'Tên playlist'),
+          decoration: InputDecoration(
+            hintText: tr('Tên playlist', 'Playlist name'),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+            child: Text(tr('Hủy', 'Cancel')),
           ),
           TextButton(
             onPressed: () {
@@ -228,13 +252,19 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 SnackBar(
                   content: Text(
                     tao
-                        ? 'Đã tạo "$ten" và thêm bài hát'
-                        : 'Tên playlist không hợp lệ',
+                        ? tr(
+                            'Đã tạo "$ten" và thêm bài hát',
+                            'Created "$ten" and added song',
+                          )
+                        : tr(
+                            'Tên playlist không hợp lệ',
+                            'Invalid playlist name',
+                          ),
                   ),
                 ),
               );
             },
-            child: const Text('Tạo'),
+            child: Text(tr('Tạo', 'Create')),
           ),
         ],
       ),
@@ -260,15 +290,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Danh sách phát',
-                        style: TextStyle(
+                      Text(
+                        tr('Danh sách phát', 'Playback queue'),
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        '${dsPhat.length} bài hát',
+                        tr(
+                          '${dsPhat.length} bài hát',
+                          '${dsPhat.length} songs',
+                        ),
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.black54,
@@ -279,9 +312,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 ),
                 const SizedBox(height: 8),
                 if (dsPhat.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text('Danh sách phát đang trống'),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      tr(
+                        'Danh sách phát đang trống',
+                        'Playback queue is empty',
+                      ),
+                    ),
                   )
                 else
                   Flexible(
@@ -322,12 +360,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
     _theoDoiViTri = mayPhat.positionStream.listen((_) {
       if (mounted) setState(() {});
     });
+    caiDat.addListener(_onDoiNgonNgu);
   }
+
+  void _onDoiNgonNgu() => mounted ? setState(() {}) : null;
 
   @override
   void dispose() {
     _theoDoiTrangThai?.cancel();
     _theoDoiViTri?.cancel();
+    caiDat.removeListener(_onDoiNgonNgu);
     super.dispose();
   }
 
@@ -337,8 +379,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
     if (bai == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Dang phat')),
-        body: const Center(child: Text('Chua chon bai hat nao')),
+        appBar: AppBar(title: Text(tr('Đang phát', 'Now playing'))),
+        body: Center(
+          child: Text(tr('Chưa chọn bài hát nào', 'No song selected')),
+        ),
       );
     }
 
@@ -346,7 +390,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Đang phát'),
+        title: Text(tr('Đang phát', 'Now playing')),
         leading: IconButton(
           icon: const Icon(Icons.keyboard_arrow_down),
           onPressed: () => Navigator.pop(context),
