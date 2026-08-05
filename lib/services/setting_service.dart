@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+final SettingsService caiDat = SettingsService();
+String tr(String vi, String en) => caiDat.locale.languageCode == 'vi' ? vi : en;
+
 enum AudioQuality { low, medium, high }
 
 class SettingsService extends ChangeNotifier {
@@ -76,3 +79,6 @@ class SettingsService extends ChangeNotifier {
     await sp.setString(_kQualityKey, s);
   }
 }
+
+final SettingsService caiDat = SettingsService();
+String tr(String vi, String en) => caiDat.locale.languageCode == 'vi' ? vi : en;

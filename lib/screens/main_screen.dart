@@ -18,7 +18,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int tabHienTai = 0;
-  final SettingsService _settings = SettingsService();
   final DataService _duLieu = DataService();
 
   @override
@@ -32,6 +31,14 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     khoiTaoYeuThich(_duLieu);
+    caiDat.addListener(_onDoiNgonNgu);
+  }
+
+  @override
+  void dispose() {
+    caiDat.removeListener(_onDoiNgonNgu);
+    _duLieu.dispose();
+    super.dispose();
   }
 
   List<Widget> get _cacTab => [
