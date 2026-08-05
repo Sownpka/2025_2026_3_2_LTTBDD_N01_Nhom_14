@@ -4,7 +4,6 @@ import '../../services/data_service.dart';
 import '../../services/setting_service.dart';
 import 'search_screen.dart';
 
-// tìm kiếm bài hát
 class SongSearchDelegate extends SearchDelegate<String> {
   final DataService dataService;
   SongSearchDelegate({required this.dataService});
@@ -32,7 +31,6 @@ class SongSearchDelegate extends SearchDelegate<String> {
   );
 }
 
-// hiển thị danh sách kết quả tìm kiếm bài hát dựa theo từ khóa
 class _SearchList extends StatefulWidget {
   final String keyword;
   final DataService dataService;
@@ -78,7 +76,6 @@ class _SearchListState extends State<_SearchList> {
         song: _results[i],
         dense: true,
         onTap: () => widget.onSelect(_results[i].title),
-        onAdd: () => addToPlaylist(context, widget.dataService, _results[i]),
       ),
     );
   }
