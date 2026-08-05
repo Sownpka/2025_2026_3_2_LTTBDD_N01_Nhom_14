@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../models/playlist.dart';
 import '../../models/song.dart';
 import '../../services/data_service.dart';
+import '../../services/audio_service.dart';
+import '../player/player_screen.dart';
 
 // StatefulWidget: giữ trạng thái bài hát đang chọn + lắng nghe dataService.
 class PlaylistDetailScreen extends StatefulWidget {
@@ -18,8 +20,6 @@ class PlaylistDetailScreen extends StatefulWidget {
 }
 
 class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
-  String? _selectedId;
-
   @override
   void initState() {
     super.initState();
@@ -33,6 +33,22 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   }
 
   void _refresh() => mounted ? setState(() {}) : null;
+
+  Route<void> _duongDanPlayer() {
+    return PageRouteBuilder(
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          PlayerScreen(dataService: widget.dataService),
+    );
+  }
+
+  void _chonBai(Song s) async {
+    Navigator.push(context, _duongDanPlayer());
+    if (baiDangPhat?.id != s.id) {
+      await phatBai(s, _playlist.songs);
+    }
+  }
 
   Playlist get _playlist => widget.dataService.playlists.firstWhere(
     (e) => e.id == widget.playlist.id,
@@ -52,19 +68,15 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
               final s = _playlist.songs[i];
               return SongItem(
                 song: s,
-                isSelected: s.id == _selectedId,
-                onTap: () => _select(s),
+                isSelected: s.id == baiDangPhat?.id,
+                onTap: () => _chonBai(s),
                 onDelete: () => _remove(s),
               );
             },
           ),
   );
 
-  void _select(Song s) =>
-      setState(() => _selectedId = _selectedId == s.id ? null : s.id);
-
   void _remove(Song s) {
-    if (_selectedId == s.id) _selectedId = null;
     widget.dataService.removeSongFromPlaylist(_playlist.id, s.id);
   }
 
